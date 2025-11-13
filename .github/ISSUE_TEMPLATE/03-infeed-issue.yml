@@ -1,0 +1,143 @@
+name: Report Infeed Issue
+description: Report problems with infeed system or material flow
+title: "[Infeed] Short issue description"
+labels: [bug, infeed-issue, status:open]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Infeed Issue Report
+        Please fill out this form completely for infeed system issues.
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: Affected Component
+      description: Select the affected infeed component
+      options:
+        - Motherboard
+        - Conveyor Motor
+        - Motor Driver
+        - Clit Sensor
+        - Packet Transfer Sensor
+        - Curtain Sensor
+        - Tower Lamp
+        - Router
+        - Power Supply
+        - Scanner
+        - Mechanical Assembly
+        - Conveyor Belt
+        - Control Panel
+        - Others
+    validations:
+      required: true
+
+  - type: dropdown
+    id: issue_category
+    attributes:
+      label: Issue Category
+      description: Primary category of the issue
+      options:
+        - Mechanical
+        - Electronics
+        - Embedded
+        - Software
+    validations:
+      required: true
+
+  - type: dropdown
+    id: component_status
+    attributes:
+      label: Component Status
+      description: Current state of the affected component
+      options:
+        - Non-functional (completely down)
+        - Intermittent (works sometimes)
+        - Degraded (reduced performance)
+        - Error state (shows errors but working)
+    validations:
+      required: true
+
+  - type: textarea
+    id: issue_description
+    attributes:
+      label: Issue Description
+      description: Clearly describe the problem observed
+      placeholder: "Describe symptoms, error messages, material flow issues, etc."
+    validations:
+      required: true
+
+  - type: dropdown
+    id: clarity
+    attributes:
+      label: Clarity of the Issue
+      description: How well-defined and reproducible is this issue?
+      options:
+        - Poor
+        - Good
+        - Excellent
+    validations:
+      required: true
+
+  - type: input
+    id: issue_start_time
+    attributes:
+      label: Issue Start Time
+      description: When did this issue first occur? (YYYY-MM-DD HH:MM format)
+      placeholder: "2025-11-12 14:30"
+    validations:
+      required: false
+
+  - type: textarea
+    id: steps_to_reproduce
+    attributes:
+      label: Steps to Reproduce
+      description: How can this issue be reproduced?
+      placeholder: |
+        1. Start conveyor belt
+        2. Place item on infeed
+        3. Observe sensor failure
+    validations:
+      required: false
+
+  - type: input
+    id: code_release_id
+    attributes:
+      label: Code Release ID
+      description: Firmware/software version running on the system
+      placeholder: "11_Release_1701_17JUN25"
+    validations:
+      required: false
+
+  - type: textarea
+    id: error_logs
+    attributes:
+      label: Error Logs / Screenshots
+      description: Paste error logs, sensor data, or attach screenshots
+      placeholder: "Paste logs here or drag and drop images"
+    validations:
+      required: false
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      description: Severity of this issue
+      options:
+        - P0 - Critical (System Down, blocking operations)
+        - P1 - High (Major impact, workaround available)
+        - P2 - Medium (Minor impact, scheduled fix)
+        - P3 - Low (Cosmetic, no operational impact)
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: Additional Context
+      description: Any other relevant information
+      placeholder: "Recent maintenance, environmental factors, related issues, etc."
+    validations:
+      required: false

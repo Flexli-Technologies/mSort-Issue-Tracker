@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infeed Issues - mSort</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Infeed Issues Dashboard</h1>
+            <div class="header-info">
+                <div class="repo-info">
+                    Monitoring: <a href="#" target="_blank" class="repo-link" id="repoLink"></a>
+                </div>
+                <div class="controls">
+                    <button class="btn" onclick="Infeed.load()">
+                        <span>Refresh</span>
+                    </button>
+                    <button class="btn secondary" onclick="Infeed.toggleAutoRefresh()">
+                        <span id="autoRefreshText">Enable Auto-Refresh</span>
+                    </button>
+                    <a href="infeed-history.html" class="btn secondary">Infeed Maintenance History</a>
+                </div>
+            </div>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">Bot Issues</a>
+                <a href="history.html" class="nav-link">Bot Maintenance History</a>
+                <a href="wtm.html" class="nav-link">WTM Issues</a>
+                <a href="infeed.html" class="nav-link active">Infeed Issues</a>
+            </div>
+            <div class="last-updated" id="lastUpdated"></div>
+        </header>
+
+        <div id="content">
+            <div class="loading">
+                <div class="loading-spinner"></div>
+                Loading infeed issues...
+            </div>
+        </div>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="infeed.js"></script>
+</body>
+</html>
