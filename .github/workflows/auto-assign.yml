@@ -23,13 +23,13 @@ jobs:
             let assignee = null;
             
             // Check labels first (priority)
-            if (labels.includes('electronic')) {
+            if (labels.includes('category:electronics')) {
               assignee = 'mayoogh-flexli';
-            } else if (labels.includes('mechanical')) {
+            } else if (labels.includes('category:mechanical')) {
               assignee = 'TusharRflexli';
-            } else if (labels.includes('embedded')) {
+            } else if (labels.includes('category:embedded')) {
               assignee = 'FlexliTushar';
-            } else if (labels.includes('software')) {
+            } else if (labels.includes('category:software')) {
               assignee = 'FlexliTushar';
             }
             
