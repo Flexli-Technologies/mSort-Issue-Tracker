@@ -719,59 +719,59 @@ h1 {
 
 .health-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 25px;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
 }
 
 .bot-health-card {
     background: white;
-    border-radius: 12px;
+    border-radius: 10px;
     padding: 0;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     overflow: hidden;
     border: 2px solid transparent;
 }
 
 .bot-health-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
 }
 
 .bot-health-card.healthy {
-    border-top: 4px solid #27ae60;
+    border-top: 3px solid #27ae60;
 }
 
 .bot-health-card.degraded {
-    border-top: 4px solid #f39c12;
+    border-top: 3px solid #f39c12;
     border-color: rgba(243, 156, 18, 0.2);
 }
 
 .bot-health-card.critical {
-    border-top: 4px solid #e74c3c;
+    border-top: 3px solid #e74c3c;
     border-color: rgba(231, 76, 60, 0.2);
 }
 
 .bot-health-header {
-    padding: 20px;
+    padding: 15px;
     text-align: center;
     background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
     border-bottom: 1px solid #ecf0f1;
 }
 
 .bot-health-id {
-    font-size: 28px;
-    font-weight: 800;
+    font-size: 22px;
+    font-weight: 700;
     color: #2c3e50;
     letter-spacing: -0.5px;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
 }
 
 .bot-health-status {
     display: inline-block;
-    padding: 6px 16px;
-    border-radius: 20px;
-    font-size: 11px;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 10px;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -793,26 +793,46 @@ h1 {
 }
 
 .bot-health-summary {
-    font-size: 13px;
+    font-size: 11px;
     color: #7f8c8d;
-    margin-top: 8px;
+    margin-top: 6px;
     font-weight: 500;
 }
 
 .component-list {
-    padding: 15px;
+    padding: 12px;
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 4px;
+    max-height: 320px;
+    overflow-y: auto;
+}
+
+.component-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.component-list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.component-list::-webkit-scrollbar-thumb {
+    background: #bdc3c7;
+    border-radius: 10px;
+}
+
+.component-list::-webkit-scrollbar-thumb:hover {
+    background: #95a5a6;
 }
 
 .component-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 12px 15px;
-    border-radius: 8px;
-    font-size: 13px;
+    padding: 8px 10px;
+    border-radius: 6px;
+    font-size: 12px;
     cursor: default;
     transition: all 0.2s;
     background: #f8f9fa;
@@ -822,17 +842,18 @@ h1 {
 .component-item:hover {
     background: white;
     border-color: #ecf0f1;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .component-item.has-issue {
     cursor: pointer;
     background: white;
+    border-color: #ecf0f1;
 }
 
 .component-item.has-issue:hover {
-    transform: translateX(5px);
+    transform: translateX(3px);
     border-color: #3498db;
+    box-shadow: 0 2px 4px rgba(52, 152, 219, 0.1);
 }
 
 .component-name {
@@ -844,17 +865,17 @@ h1 {
 .component-health {
     display: flex;
     align-items: center;
-    gap: 8px;
-    font-size: 10px;
+    gap: 6px;
+    font-size: 9px;
     font-weight: 700;
-    padding: 6px 12px;
-    border-radius: 20px;
+    padding: 4px 8px;
+    border-radius: 12px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
 
 .component-health .status-icon {
-    font-size: 14px;
+    font-size: 12px;
 }
 
 .component-health.healthy {
@@ -887,11 +908,11 @@ h1 {
     position: fixed;
     background: white;
     border: none;
-    border-radius: 12px;
-    padding: 20px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-    z-index: 1000;
-    max-width: 350px;
+    border-radius: 10px;
+    padding: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    z-index: 10000;
+    max-width: 320px;
     display: none;
     animation: popupFadeIn 0.2s ease-out;
 }
@@ -899,7 +920,7 @@ h1 {
 @keyframes popupFadeIn {
     from {
         opacity: 0;
-        transform: translateY(-10px);
+        transform: translateY(-8px);
     }
     to {
         opacity: 1;
@@ -914,55 +935,57 @@ h1 {
 .issue-popup::before {
     content: '';
     position: absolute;
-    top: -8px;
+    top: -6px;
     left: 20px;
     width: 0;
     height: 0;
-    border-left: 8px solid transparent;
-    border-right: 8px solid transparent;
-    border-bottom: 8px solid white;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-bottom: 6px solid white;
 }
 
 .issue-popup h4 {
     color: #2c3e50;
-    margin-bottom: 15px;
-    font-size: 16px;
+    margin-bottom: 12px;
+    font-size: 14px;
     font-weight: 700;
-    padding-bottom: 10px;
+    padding-bottom: 8px;
     border-bottom: 2px solid #ecf0f1;
 }
 
 .issue-popup-row {
-    font-size: 13px;
-    margin: 10px 0;
+    font-size: 12px;
+    margin: 8px 0;
     color: #7f8c8d;
     display: flex;
-    gap: 10px;
+    gap: 8px;
 }
 
 .issue-popup-row strong {
     color: #2c3e50;
     font-weight: 600;
-    min-width: 80px;
+    min-width: 75px;
 }
 
 .issue-popup-description {
-    margin-top: 15px;
-    padding-top: 15px;
+    margin-top: 12px;
+    padding-top: 12px;
     border-top: 1px solid #ecf0f1;
-    font-size: 13px;
+    font-size: 12px;
     color: #2c3e50;
-    line-height: 1.6;
+    line-height: 1.5;
+    max-height: 80px;
+    overflow-y: auto;
 }
 
 .issue-popup-link {
     display: inline-block;
-    margin-top: 15px;
-    padding: 10px 20px;
+    margin-top: 12px;
+    padding: 8px 16px;
     background: #3498db;
     color: white;
     text-decoration: none;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 600;
     border-radius: 6px;
     transition: all 0.3s;
@@ -970,8 +993,8 @@ h1 {
 
 .issue-popup-link:hover {
     background: #2980b9;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(52, 152, 219, 0.3);
 }
 
 /* Empty State */

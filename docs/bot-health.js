@@ -327,18 +327,42 @@ const BotHealth = {
 
         document.getElementById('healthCards').innerHTML = html;
         
+        // Add event listeners for hover functionality
         document.querySelectorAll('.component-item.has-issue').forEach(item => {
-            item.addEventListener('click', (e) => {
-                const botId = item.getAttribute('data-bot');
-                const component = item.getAttribute('data-component');
+            const botId = item.getAttribute('data-bot');
+            const component = item.getAttribute('data-component');
+            
+            // Mouse enter - show popup
+            item.addEventListener('mouseenter', (e) => {
                 this.showPopup(e, botId, component);
             });
+            
+            // Mouse leave - hide popup
+            item.addEventListener('mouseleave', () => {
+                this.hidePopup();
+            });
+            
+            // Click - go to issue
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                const health = this.getComponentHealth(botId, component);
+                if (health.issue) {
+                    window.open(health.issue.issueUrl, '_blank');
+                }
+            });
+        });
+        
+        // Keep popup visible when hovering over it
+        const popup = document.getElementById('issuePopup');
+        popup.addEventListener('mouseenter', () => {
+            popup.classList.add('show');
+        });
+        popup.addEventListener('mouseleave', () => {
+            this.hidePopup();
         });
     },
 
     showPopup(event, botId, component) {
-        event.stopPropagation();
-        
         const health = this.getComponentHealth(botId, component);
         if (!health.issue) return;
 
@@ -349,6 +373,10 @@ const BotHealth = {
         
         popup.innerHTML = `
             <h4>${issue.issueTitle}</h4>
+            <div class="issue-popup-row">
+                <strong>Bot:</strong>
+                <span>${botId}</span>
+            </div>
             <div class="issue-popup-row">
                 <strong>Component:</strong>
                 <span>${issue.component}</span>
@@ -369,21 +397,32 @@ const BotHealth = {
                 <strong>Duration:</strong>
                 <span>${timeSince}</span>
             </div>
-            ${issue.description ? `<div class="issue-popup-description">${issue.description}${issue.description.length === 200 ? '...' : ''}</div>` : ''}
-            <a href="${issue.issueUrl}" target="_blank" class="issue-popup-link">View Full Issue #${issue.issueNumber}</a>
+            ${issue.description ? `<div class="issue-popup-description">${issue.description}</div>` : ''}
+            <a href="${issue.issueUrl}" target="_blank" class="issue-popup-link" onclick="event.stopPropagation()">View Full Issue #${issue.issueNumber}</a>
         `;
         
+        // Position popup
         const rect = event.target.closest('.component-item').getBoundingClientRect();
-        const popupWidth = 350;
+        const popupWidth = 320;
         const windowWidth = window.innerWidth;
+        const windowHeight = window.innerHeight;
         
         let left = rect.left;
+        let top = rect.bottom + window.scrollY + 10;
+        
+        // Adjust horizontal position if popup would overflow
         if (left + popupWidth > windowWidth) {
             left = windowWidth - popupWidth - 20;
         }
         
-        popup.style.left = `${left}px`;
-        popup.style.top = `${rect.bottom + window.scrollY + 10}px`;
+        // Adjust vertical position if popup would overflow
+        const popupHeight = 300; // Estimated
+        if (rect.bottom + popupHeight > windowHeight) {
+            top = rect.top + window.scrollY - popupHeight - 10;
+        }
+        
+        popup.style.left = `${Math.max(10, left)}px`;
+        popup.style.top = `${top}px`;
         popup.classList.add('show');
     },
 
