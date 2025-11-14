@@ -1,0 +1,154 @@
+name: Process Existing Issues
+
+on:
+  workflow_dispatch:
+    inputs:
+      process_all:
+        description: 'Process all open issues'
+        required: true
+        default: 'true'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+      max_issues:
+        description: 'Maximum number of issues to process (0 = all)'
+        required: false
+        default: '0'
+
+jobs:
+  process-issues:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    
+    steps:
+      - name: Process existing issues
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const maxIssues = parseInt('${{ github.event.inputs.max_issues }}') || 0;
+            
+            // Function to determine assignee
+            function getAssignee(issue) {
+              const issueBody = (issue.body || '').toLowerCase();
+              const issueTitle = (issue.title || '').toLowerCase();
+              const labels = issue.labels.map(label => label.name.toLowerCase());
+              
+              let assignee = null;
+              
+              // Check labels first (priority)
+              if (labels.includes('electronic')) {
+                assignee = 'mayoogh-flexli';
+              } else if (labels.includes('mechanical')) {
+                assignee = 'TusharRflexli';
+              } else if (labels.includes('embedded')) {
+                assignee = 'FlexliTushar';
+              } else if (labels.includes('software')) {
+                assignee = 'FlexliTushar';
+              }
+              
+              // If no label match, check keywords in title and body
+              if (!assignee) {
+                const content = issueTitle + ' ' + issueBody;
+                
+                if (content.includes('firmware') || content.includes('code') || content.includes('program')) {
+                  assignee = 'FlexliTushar';
+                } else if (content.includes('mechanical')) {
+                  assignee = 'TusharRflexli';
+                } else if (content.includes('harness') || content.includes('pcb')) {
+                  assignee = 'mayoogh-flexli';
+                }
+              }
+              
+              return assignee;
+            }
+            
+            // Get all open issues
+            let allIssues = [];
+            let page = 1;
+            const perPage = 100;
+            
+            while (true) {
+              const issues = await github.rest.issues.listForRepo({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                state: 'open',
+                per_page: perPage,
+                page: page
+              });
+              
+              if (issues.data.length === 0) break;
+              
+              // Filter out pull requests
+              const onlyIssues = issues.data.filter(issue => !issue.pull_request);
+              allIssues = allIssues.concat(onlyIssues);
+              
+              if (issues.data.length < perPage) break;
+              page++;
+              
+              // Limit if maxIssues is set
+              if (maxIssues > 0 && allIssues.length >= maxIssues) {
+                allIssues = allIssues.slice(0, maxIssues);
+                break;
+              }
+            }
+            
+            console.log(`Found ${allIssues.length} open issues to process`);
+            
+            let assigned = 0;
+            let skipped = 0;
+            let failed = 0;
+            
+            // Process each issue
+            for (const issue of allIssues) {
+              // Skip if already assigned
+              if (issue.assignees && issue.assignees.length > 0) {
+                console.log(`Issue #${issue.number} already assigned, skipping`);
+                skipped++;
+                continue;
+              }
+              
+              const assignee = getAssignee(issue);
+              
+              if (assignee) {
+                try {
+                  await github.rest.issues.addAssignees({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    issue_number: issue.number,
+                    assignees: [assignee]
+                  });
+                  console.log(`✓ Assigned issue #${issue.number} to ${assignee}`);
+                  assigned++;
+                  
+                  // Add a small delay to avoid rate limiting
+                  await new Promise(resolve => setTimeout(resolve, 100));
+                } catch (error) {
+                  console.error(`✗ Failed to assign issue #${issue.number}: ${error.message}`);
+                  failed++;
+                }
+              } else {
+                console.log(`No matching criteria for issue #${issue.number}`);
+                skipped++;
+              }
+            }
+            
+            // Summary
+            console.log('\n=== Summary ===');
+            console.log(`Total issues processed: ${allIssues.length}`);
+            console.log(`Successfully assigned: ${assigned}`);
+            console.log(`Skipped (already assigned or no match): ${skipped}`);
+            console.log(`Failed: ${failed}`);
+            
+            // Create a comment on the workflow run with summary
+            core.summary
+              .addHeading('Issue Assignment Summary')
+              .addTable([
+                [{data: 'Metric', header: true}, {data: 'Count', header: true}],
+                ['Total Issues Processed', allIssues.length.toString()],
+                ['Successfully Assigned', assigned.toString()],
+                ['Skipped', skipped.toString()],
+                ['Failed', failed.toString()]
+              ])
+              .write();
