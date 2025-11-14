@@ -1,0 +1,85 @@
+name: Auto Assign Issues
+
+on:
+  issues:
+    types: [opened, edited]
+
+jobs:
+  auto-assign:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+
+      - name: Auto assign based on category or keywords
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const issue = context.payload.issue;
+            const body = issue.body ? issue.body.toLowerCase() : "";
+            const title = issue.title.toLowerCase();
+
+            // -----------------------------
+            // 1️⃣ CATEGORY → ASSIGNEE MAPPING
+            // -----------------------------
+            const categoryAssignees = {
+              "electronic": "mayoogh-flexli",
+              "mechanical": "TusharRflexli",
+              "embedded": "FlexliTushar",
+              "software": "FlexliTushar"
+            };
+
+            // Extract category from issue body (your form field)
+            let matchedCategory = null;
+            for (const cat of Object.keys(categoryAssignees)) {
+              if (body.includes(cat)) {
+                matchedCategory = cat;
+                break;
+              }
+            }
+
+            // -----------------------------
+            // 2️⃣ KEYWORD → ASSIGNEE MAPPING
+            // -----------------------------
+            const keywordAssignees = {
+              "firmware": "FlexliTushar",
+              "code": "FlexliTushar",
+              "program": "FlexliTushar",
+              "mechanical": "TusharRflexli",
+              "harness": "mayoogh-flexli",
+              "pcb": "mayoogh-flexli"
+            };
+
+            let matchedKeyword = null;
+            for (const [keyword, user] of Object.entries(keywordAssignees)) {
+              if (title.includes(keyword) || body.includes(keyword)) {
+                matchedKeyword = keyword;
+                break;
+              }
+            }
+
+            // -----------------------------
+            // 3️⃣ PRIORITY LOGIC
+            // -----------------------------
+            let assignee = null;
+
+            if (matchedCategory) {
+              assignee = categoryAssignees[matchedCategory];
+              console.log(`Matched category '${matchedCategory}', assigning to ${assignee}`);
+            } else if (matchedKeyword) {
+              assignee = keywordAssignees[matchedKeyword];
+              console.log(`Matched keyword '${matchedKeyword}', assigning to ${assignee}`);
+            }
+
+            if (assignee) {
+              await github.rest.issues.addAssignees({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                assignees: [assignee]
+              });
+            } else {
+              console.log("No category or keyword match found — no auto-assign.");
+            }
