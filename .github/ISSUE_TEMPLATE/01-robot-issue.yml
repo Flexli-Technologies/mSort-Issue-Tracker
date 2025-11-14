@@ -141,10 +141,9 @@ body:
       label: Priority
       description: Severity of this issue
       options:
-        - P0 - Critical (Bot Down, blocking operations)
-        - P1 - High (Major impact, workaround available)
-        - P2 - Medium (Minor impact, scheduled fix)
-        - P3 - Low (Cosmetic, no operational impact)
+        - P1 - Critical (Bot Down, blocking operations)
+        - P2 - Important (Major impact, workaround available)
+        - P3 - Minor (Minor impact, scheduled fix)
     validations:
       required: true
 
