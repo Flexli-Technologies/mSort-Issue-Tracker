@@ -1,0 +1,95 @@
+name: 🛠️ Generic Issue (System-Wide / Design / Common Issue)
+description: Report an issue that affects all bots or the entire system (not tied to any specific Bot ID)
+title: "[GENERIC] Short issue description"
+labels: [generic-issue]
+assignees: []
+
+body:
+  - type: dropdown
+    id: category
+    attributes:
+      label: 📂 Category
+      description: Select the type of generic/system-wide issue.
+      options:
+        - Design Error / Flaw
+        - Mechanical Issue (Common)
+        - Electronics Issue (Common)
+        - Firmware Issue (Common)
+        - Manufacturing / Assembly Issue
+        - Process / SOP Issue
+        - Documentation Issue
+        - Safety Issue
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: 📝 Issue Description
+      description: Describe the problem clearly. This issue must *not* be specific to one bot.
+      placeholder: |
+        Example:
+        - Diverter lever mechanical design causes jamming in all bots
+        - Hall sensor wiring layout has interference for all units
+        - Incorrect dimension in CAD drawing affects all builds
+    validations:
+      required: true
+
+  - type: textarea
+    id: impact
+    attributes:
+      label: 📊 Impact / Scope
+      description: Explain how this issue affects the system or fleet.
+      placeholder: |
+        - Affects all bots built after June 2024
+        - Impacts all diverter assemblies
+        - Causes failure rate of ~30% in production
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps_to_reproduce
+    attributes:
+      label: 🔄 Steps to Reproduce (if applicable)
+      description: Provide steps to reproduce the issue, if reproducible.
+      placeholder: |
+        1. Power on system
+        2. Trigger diverter actuation
+        3. Observe mechanical jam
+    validations:
+      required: false
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: 🚨 Severity
+      description: Select severity level.
+      options:
+        - Critical (System unusable / safety risk)
+        - High (Major operational impact)
+        - Medium (Moderate impact)
+        - Low (Minor / cosmetic)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: clarity
+    attributes:
+      label: 🧠 Clarity Level
+      description: Rate how clearly the issue is described.
+      options:
+        - High (clear and detailed)
+        - Medium (some details missing)
+        - Low (needs improvement)
+    validations:
+      required: true
+
+  - type: textarea
+    id: attachments
+    attributes:
+      label: 📎 Logs / Screenshots / Evidence
+      description: Upload or paste supporting materials.
+      placeholder: "Attach drawings, test logs, photos, videos, etc."
+    validations:
+      required: false
