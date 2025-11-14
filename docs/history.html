@@ -33,6 +33,19 @@
                     <option value="">All Bots</option>
                 </select>
 
+                <label for="featureFilter">Feature:</label>
+                <select id="featureFilter" onchange="History.applyFilters()">
+                    <option value="">All Features</option>
+                    <option value="F1_bot_movement">F1 - Bot Movement</option>
+                    <option value="F2_station_reader">F2 - Station Reader</option>
+                    <option value="F3_switching">F3 - Switching</option>
+                    <option value="F4_collision">F4 - Collision Avoidance</option>
+                    <option value="F5_infeed">F5 - Infeed</option>
+                    <option value="F6_drop_off">F6 - Drop-off</option>
+                    <option value="F7_motherbag_closure">F7 - Motherbag Closure</option>
+                    <option value="F8_dashboard">F8 - Dashboard</option>
+                </select>
+
                 <label for="categoryFilter">Category:</label>
                 <select id="categoryFilter" onchange="History.applyFilters()">
                     <option value="">All Categories</option>

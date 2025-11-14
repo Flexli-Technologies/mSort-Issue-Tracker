@@ -63,6 +63,10 @@ const History = {
         const clarityMatch = body.match(/###\s*Clarity of the Issue\s*\n\s*(.+)/i);
         const clarity = clarityMatch ? clarityMatch[1].trim() : 'Unknown';
 
+        // Extract feature from labels
+        const featureLabel = issue.labels.find(l => l.name.startsWith('F') && l.name.includes('_'));
+        const feature = featureLabel ? featureLabel.name : 'Not assigned';
+
         const compStatusMatch = body.match(/###\s*Component Status\s*\n\s*(.+)/i);
         const componentStatus = compStatusMatch ? compStatusMatch[1].trim() : 'Unknown';
 
@@ -82,6 +86,7 @@ const History = {
             component,
             category,
             clarity,
+            feature,
             componentStatus,
             priority,
             issueTime,
@@ -119,12 +124,14 @@ const History = {
 
     applyFilters() {
         const botFilter = document.getElementById('botFilter').value;
+        const featureFilter = document.getElementById('featureFilter').value;
         const categoryFilter = document.getElementById('categoryFilter').value;
         const componentFilter = document.getElementById('componentFilter').value;
         const stateFilter = document.getElementById('stateFilter').value;
 
         this.filteredIssues = this.allIssues.filter(issue => {
             if (botFilter && issue.botId !== botFilter) return false;
+            if (featureFilter && issue.feature !== featureFilter) return false;
             if (categoryFilter && issue.category !== categoryFilter) return false;
             if (componentFilter && issue.component !== componentFilter) return false;
             if (stateFilter && issue.state !== stateFilter) return false;
@@ -231,6 +238,10 @@ const History = {
                     </div>
                     
                     <div class="history-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Feature</span>
+                            <span class="feature-badge">${issue.feature}</span>
+                        </div>
                         <div class="detail-item">
                             <span class="detail-label">Component</span>
                             <span class="detail-value">${issue.component}</span>

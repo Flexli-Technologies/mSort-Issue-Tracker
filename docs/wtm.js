@@ -60,6 +60,10 @@ const WTM = {
         const clarityMatch = body.match(/###\s*Clarity of the Issue\s*\n\s*(.+)/i);
         const clarity = clarityMatch ? clarityMatch[1].trim() : 'Unknown';
 
+        // Extract feature from labels
+        const featureLabel = issue.labels.find(l => l.name.startsWith('F') && l.name.includes('_'));
+        const feature = featureLabel ? featureLabel.name : 'Not assigned';
+
         const compStatusMatch = body.match(/###\s*Component Status\s*\n\s*(.+)/i);
         const componentStatus = compStatusMatch ? compStatusMatch[1].trim() : 'Unknown';
 
@@ -85,6 +89,7 @@ const WTM = {
             component,
             category,
             clarity,
+            feature,
             componentStatus,
             priority,
             issueTime,
@@ -158,6 +163,10 @@ const WTM = {
                     </div>
                     
                     <div class="issue-info">
+                        <div class="issue-row">
+                            <span class="issue-label">Feature:</span>
+                            <span class="feature-badge">${issue.feature}</span>
+                        </div>
                         <div class="issue-row">
                             <span class="issue-label">Zone:</span>
                             <span class="issue-value">${issue.zone}</span>

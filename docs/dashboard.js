@@ -57,6 +57,10 @@ const Dashboard = {
         const clarityMatch = body.match(/###\s*Clarity of the Issue\s*\n\s*(.+)/i);
         const clarity = clarityMatch ? clarityMatch[1].trim() : 'Unknown';
 
+        // Extract feature from labels
+        const featureLabel = issue.labels.find(l => l.name.startsWith('F') && l.name.includes('_'));
+        const feature = featureLabel ? featureLabel.name : 'Not assigned';
+
         let status = 'operational';
         const labelNames = issue.labels.map(l => l.name.toLowerCase());
         
@@ -97,6 +101,7 @@ const Dashboard = {
             component,
             category,
             clarity,
+            feature,
             status,
             componentStatus,
             priority,
@@ -194,6 +199,10 @@ const Dashboard = {
                 html += `
                     <div class="issue-info">
                         <div class="issue-title">${issue.issueTitle}</div>
+                        <div class="issue-row">
+                            <span class="issue-label">Feature:</span>
+                            <span class="feature-badge">${issue.feature}</span>
+                        </div>
                         <div class="issue-row">
                             <span class="issue-label">Component:</span>
                             <span class="issue-value">${issue.component}</span>
