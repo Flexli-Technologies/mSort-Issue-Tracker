@@ -2,84 +2,63 @@ name: Auto Assign Issues
 
 on:
   issues:
-    types: [opened, edited]
+    types: [opened, labeled]
 
 jobs:
   auto-assign:
     runs-on: ubuntu-latest
-
+    permissions:
+      issues: write
+    
     steps:
-      - name: Check out repo
-        uses: actions/checkout@v4
-
-      - name: Auto assign based on category or keywords
+      - name: Assign based on label or keywords
         uses: actions/github-script@v7
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const issue = context.payload.issue;
-            const body = issue.body ? issue.body.toLowerCase() : "";
-            const title = issue.title.toLowerCase();
-
-            // -----------------------------
-            // 1️⃣ CATEGORY → ASSIGNEE MAPPING
-            // -----------------------------
-            const categoryAssignees = {
-              "electronic": "mayoogh-flexli",
-              "mechanical": "TusharRflexli",
-              "embedded": "FlexliTushar",
-              "software": "FlexliTushar"
-            };
-
-            // Extract category from issue body (your form field)
-            let matchedCategory = null;
-            for (const cat of Object.keys(categoryAssignees)) {
-              if (body.includes(cat)) {
-                matchedCategory = cat;
-                break;
-              }
-            }
-
-            // -----------------------------
-            // 2️⃣ KEYWORD → ASSIGNEE MAPPING
-            // -----------------------------
-            const keywordAssignees = {
-              "firmware": "FlexliTushar",
-              "code": "FlexliTushar",
-              "program": "FlexliTushar",
-              "mechanical": "TusharRflexli",
-              "harness": "mayoogh-flexli",
-              "pcb": "mayoogh-flexli"
-            };
-
-            let matchedKeyword = null;
-            for (const [keyword, user] of Object.entries(keywordAssignees)) {
-              if (title.includes(keyword) || body.includes(keyword)) {
-                matchedKeyword = keyword;
-                break;
-              }
-            }
-
-            // -----------------------------
-            // 3️⃣ PRIORITY LOGIC
-            // -----------------------------
+            const issueBody = (issue.body || '').toLowerCase();
+            const issueTitle = (issue.title || '').toLowerCase();
+            const labels = issue.labels.map(label => label.name.toLowerCase());
+            
             let assignee = null;
-
-            if (matchedCategory) {
-              assignee = categoryAssignees[matchedCategory];
-              console.log(`Matched category '${matchedCategory}', assigning to ${assignee}`);
-            } else if (matchedKeyword) {
-              assignee = keywordAssignees[matchedKeyword];
-              console.log(`Matched keyword '${matchedKeyword}', assigning to ${assignee}`);
+            
+            // Check labels first (priority)
+            if (labels.includes('electronic')) {
+              assignee = 'mayoogh-flexli';
+            } else if (labels.includes('mechanical')) {
+              assignee = 'TusharRflexli';
+            } else if (labels.includes('embedded')) {
+              assignee = 'FlexliTushar';
+            } else if (labels.includes('software')) {
+              assignee = 'FlexliTushar';
             }
-
+            
+            // If no label match, check keywords in title and body
+            if (!assignee) {
+              const content = issueTitle + ' ' + issueBody;
+              
+              if (content.includes('firmware') || content.includes('code') || content.includes('program')) {
+                assignee = 'FlexliTushar';
+              } else if (content.includes('mechanical')) {
+                assignee = 'TusharRflexli';
+              } else if (content.includes('harness') || content.includes('pcb')) {
+                assignee = 'mayoogh-flexli';
+              }
+            }
+            
+            // Assign the issue if assignee is determined
             if (assignee) {
-              await github.rest.issues.addAssignees({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: issue.number,
-                assignees: [assignee]
-              });
+              try {
+                await github.rest.issues.addAssignees({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issue.number,
+                  assignees: [assignee]
+                });
+                console.log(`Assigned issue #${issue.number} to ${assignee}`);
+              } catch (error) {
+                console.error(`Failed to assign: ${error.message}`);
+              }
             } else {
-              console.log("No category or keyword match found — no auto-assign.");
+              console.log('No matching criteria found for auto-assignment');
             }
