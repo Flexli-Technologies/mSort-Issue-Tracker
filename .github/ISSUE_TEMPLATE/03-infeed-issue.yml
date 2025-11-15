@@ -14,7 +14,7 @@ body:
   - type: dropdown
     id: component
     attributes:
-      label: Affected Component
+      label: 🛠️ Affected Component
       description: Select the affected infeed component
       options:
         - Motherboard
@@ -37,7 +37,7 @@ body:
   - type: dropdown
     id: issue_category
     attributes:
-      label: Issue Category
+      label: 📂 Issue Category
       description: Primary category of the issue
       options:
         - Mechanical
@@ -50,7 +50,7 @@ body:
   - type: dropdown
     id: component_status
     attributes:
-      label: Component Status
+      label: ⚙️ Component Status
       description: Current state of the affected component
       options:
         - Non-functional (completely down)
@@ -63,7 +63,7 @@ body:
   - type: textarea
     id: issue_description
     attributes:
-      label: Issue Description
+      label: 📝 Issue Description
       description: Clearly describe the problem observed
       placeholder: "Describe symptoms, error messages, material flow issues, etc."
     validations:
@@ -72,7 +72,7 @@ body:
   - type: dropdown
     id: clarity
     attributes:
-      label: Clarity of the Issue
+      label: 🔍 Clarity of the Issue
       description: How well-defined and reproducible is this issue?
       options:
         - Poor
@@ -84,7 +84,7 @@ body:
   - type: input
     id: issue_start_time
     attributes:
-      label: Issue Start Time
+      label: 🕒 Issue Start Time
       description: When did this issue first occur? (YYYY-MM-DD HH:MM format)
       placeholder: "2025-11-12 14:30"
     validations:
@@ -93,7 +93,7 @@ body:
   - type: textarea
     id: steps_to_reproduce
     attributes:
-      label: Steps to Reproduce
+      label: 🔁 Steps to Reproduce
       description: How can this issue be reproduced?
       placeholder: |
         1. Start conveyor belt
@@ -105,7 +105,7 @@ body:
   - type: input
     id: code_release_id
     attributes:
-      label: Code Release ID
+      label: 🏷️ Code Release ID
       description: Firmware/software version running on the system
       placeholder: "11_Release_1701_17JUN25"
     validations:
@@ -114,7 +114,7 @@ body:
   - type: textarea
     id: error_logs
     attributes:
-      label: Error Logs / Screenshots
+      label: 🧾 Error Logs / Screenshots
       description: Paste error logs, sensor data, or attach screenshots
       placeholder: "Paste logs here or drag and drop images"
     validations:
@@ -123,7 +123,7 @@ body:
   - type: dropdown
     id: priority
     attributes:
-      label: Priority
+      label: 🚨 Priority
       description: Severity of this issue
       options:
         - P1 - Critical (Bot Down, blocking operations)
@@ -135,7 +135,7 @@ body:
   - type: textarea
     id: additional_context
     attributes:
-      label: Additional Context
+      label: 📘 Additional Context
       description: Any other relevant information
       placeholder: "Recent maintenance, environmental factors, related issues, etc."
     validations:
